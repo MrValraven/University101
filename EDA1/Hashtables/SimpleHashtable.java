@@ -4,8 +4,8 @@ public class SimpleHashtable<AnyType> {
 
     private StoredElement<AnyType>[] hashtable;
 
-    public SimpleHashtable() {
-        hashtable = new StoredElement[10];
+    public SimpleHashtable(int capacity) {
+        hashtable = new StoredElement[capacity];
     }
 
     public void put(String key, AnyType element) {
@@ -45,6 +45,19 @@ public class SimpleHashtable<AnyType> {
         return hashtable[hashedKey].element;
     }
 
+    public AnyType remove(String key) {
+        int hashedKey = findKey(key);
+
+        if (hashedKey == -1) {
+            return null;
+        }
+
+        AnyType element = hashtable[hashedKey].element;
+        hashtable[hashedKey] = null;
+
+        return element;
+    }
+
     private int hashKey(String key) {
         return key.length() % hashtable.length;
     }
@@ -70,12 +83,12 @@ public class SimpleHashtable<AnyType> {
             hashedKey = (hashedKey + 1) % hashtable.length;
         }
 
-        if (stopIndex == hashedKey) {
-            return -1;
+        if (hashtable[hashedKey] != null && hashtable[hashedKey].key.equals(key)) { 
+            return hashedKey;
         }
 
         else  {
-            return hashedKey;
+            return -1;
         }
 
     }
