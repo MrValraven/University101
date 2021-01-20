@@ -3,8 +3,10 @@ package EDA1.Hashtables;
 public class SimpleHashtable<AnyType> {
 
     private StoredElement<AnyType>[] hashtable;
+    private int capacity;
 
     public SimpleHashtable(int capacity) {
+        this.capacity = capacity;
         hashtable = new StoredElement[capacity];
     }
 
@@ -54,6 +56,15 @@ public class SimpleHashtable<AnyType> {
 
         AnyType element = hashtable[hashedKey].element;
         hashtable[hashedKey] = null;
+
+        StoredElement<AnyType>[] oldHashtable = hashtable;
+        hashtable = new StoredElement[oldHashtable.length];
+
+        for(int i = 0; i < oldHashtable.length; i++) {
+            if(oldHashtable[i] != null) {
+                put(oldHashtable[i].key, oldHashtable[i].element);
+            }
+        }
 
         return element;
     }
