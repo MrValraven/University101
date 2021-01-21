@@ -70,7 +70,7 @@ public class SimpleHashtable<AnyType> {
     }
 
     private int hashKey(String key) {
-        return key.length() % hashtable.length;
+        return Math.abs(key.hashCode() % hashtable.length);
     }
 
     private int findKey(String key) {
