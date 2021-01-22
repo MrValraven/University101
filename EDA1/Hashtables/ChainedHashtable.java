@@ -1,4 +1,4 @@
-package EDA1.Hashtables;
+package Hashtables;
 
 import java.util.LinkedList;
 import java.util.ListIterator;

@@ -1,4 +1,4 @@
-package EDA1.Hashtables;
+package Hashtables;
 
 public class Main {
     
