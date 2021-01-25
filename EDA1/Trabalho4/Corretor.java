@@ -27,6 +27,7 @@ public class Corretor {
         incorrectWords = new String[text.length()];
 
         addLetters("ador");
+        removeLetters("adoror");
     }
 
     private static String[] addLetters(String word) {
@@ -39,7 +40,7 @@ public class Corretor {
 
         for(int i = 0; i < alphabet.length; i++) {
 
-            //Reset da palvra e do index
+            //Reset da palvra e do index onde vamos adicionar uma letra nova
             index = 0;
             newWord = word + " ";
 
@@ -64,8 +65,33 @@ public class Corretor {
         return correctedWords;
     }
 
-    private void removeLetter(String word) {
+    private static String[] removeLetters(String word) {
 
+        int index = 0;
+        int correctWordIndex = 0;
+        String newWord = word;
+
+        //Array com espaço suficiente para todas as sugestões
+        String[] correctedWords = new String[word.length()];
+
+        while(hashtable.get(newWord) == null && index < word.length()) {
+            newWord = deleteChar(word, index);
+            if(hashtable.get(newWord) != null) {
+                correctedWords[correctWordIndex] = newWord;
+                correctWordIndex++;
+            }
+                
+            index++;
+        }
+        
+        for(int i = 0; i < correctedWords.length; i++) {
+            if(correctedWords[i] != null) {
+                System.out.println(correctedWords[i]);
+            }
+        }
+
+        return correctedWords;
+        
     }
 
     private void swapLetters(String word) {
@@ -76,6 +102,13 @@ public class Corretor {
 
         StringBuilder newWord = new StringBuilder(word);
         newWord.insert(index, letter);
+        return newWord.toString();
+    }
+
+    private static String deleteChar(String word, int index) {
+
+        StringBuilder newWord = new StringBuilder(word);
+        newWord.deleteCharAt(index);
         return newWord.toString();
     }
 
