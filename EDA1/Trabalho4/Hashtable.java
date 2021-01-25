@@ -47,6 +47,28 @@ public class Hashtable<AnyType> {
         return hashtable[hashedKey].element;
     }
 
+    public AnyType remove(String key) {
+        int hashedKey = findKey(key);
+
+        if (hashedKey == -1) {
+            return null;
+        }
+
+        AnyType element = hashtable[hashedKey].element;
+        hashtable[hashedKey] = null;
+
+        StoredElement<AnyType>[] oldHashtable = hashtable;
+        hashtable = new StoredElement[oldHashtable.length];
+
+        for(int i = 0; i < oldHashtable.length; i++) {
+            if(oldHashtable[i] != null) {
+                put(oldHashtable[i].key, oldHashtable[i].element);
+            }
+        }
+
+        return element;
+    }
+
     private int hashKey(String key) {
         return Math.abs(key.hashCode() % hashtable.length);
     }

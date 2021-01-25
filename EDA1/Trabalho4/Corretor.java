@@ -7,33 +7,61 @@ import java.io.IOException;
 
 public class Corretor {
 
-    private char[] alphabet = 
-    {
-        'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
-        'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',  
-        'á','à','ã','â','Á','À','Ã','Â',
-        'é','ê','É','Ê',
-        'í','ì','î','Í','Ì','Î',
-        'ó','ò','õ','ô','Ó','Ò','Õ','Ô',
-        'ú','ù','û','Ú','Ù','Û'
-    };
-    
-    
+    private static Hashtable<String> hashtable;
+    private static String[] incorrectWords;
+    private static char[] alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
+            'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+            'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'á', 'à', 'ã', 'â', 'Á', 'À', 'Ã',
+            'Â', 'é', 'ê', 'É', 'Ê', 'í', 'ì', 'î', 'Í', 'Ì', 'Î', 'ó', 'ò', 'õ', 'ô', 'Ó', 'Ò', 'Õ', 'Ô', 'ú', 'ù',
+            'û', 'Ú', 'Ù', 'Û', '-' };
 
     public static void main(String[] args) {
 
-        File file = new File("C:/Users/AKATi/Desktop/University/University101/EDA1/wordlist-ao-2020.text");
+        String fileName = "Trabalho4/wordlist-ao-2020.txt";
 
-        System.out.println(file.exists());
+        File file = new File(fileName);
 
+        createDictionary(file);
 
-       /*readFile("dicionario.txt"); */
+        String text = "";
+        incorrectWords = new String[text.length()];
 
-        LinHashtable<String> hashtable = new LinHashtable<String>(20);
+        addLetters("ador");
     }
 
-    private void addLetter(String word) {
+    private static String[] addLetters(String word) {
+        int index = 0;
+        int correctWordIndex = 0;
+        String newWord;
 
+        //Array com espaço suficiente para todas as sugestões
+        String[] correctedWords = new String[word.length() * 2];
+
+        for(int i = 0; i < alphabet.length; i++) {
+
+            //Reset da palvra e do index
+            index = 0;
+            newWord = word + " ";
+
+            // word length + 1 porque estamos a adiconar uma letra nova (potencialmente)
+            while(hashtable.get(newWord) == null && index < word.length() + 1) {
+                newWord = addChar(word, alphabet[i], index);
+                if(hashtable.get(newWord) != null) {
+                    correctedWords[correctWordIndex] = newWord;
+                    correctWordIndex++;
+                }
+                
+                index++;
+            } 
+        }
+        
+        for(int i = 0; i < correctedWords.length; i++) {
+            if(correctedWords[i] != null) {
+                System.out.println(correctedWords[i]);
+            }
+        }
+
+        return correctedWords;
     }
 
     private void removeLetter(String word) {
@@ -44,15 +72,25 @@ public class Corretor {
 
     }
 
-    private static void readFile(String fileName) {
+    private static String addChar(String word, char letter, int index) {
+
+        StringBuilder newWord = new StringBuilder(word);
+        newWord.insert(index, letter);
+        return newWord.toString();
+    }
+
+    private static void createDictionary(File file) {
         
         try{
-            File file = new File("wordlist-ao-2020.txt");
+
+            int numberOfLines = getNumberOfLines(file);
+            hashtable = new Hashtable<String>(numberOfLines);
+
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = reader.readLine();
             while (line != null){
-                System.out.println(line);
-                /* line = reader.readLine(); */
+                hashtable.put(line, line);
+                line = reader.readLine();
             }
             reader.close();
         } catch(IOException ex){
@@ -60,4 +98,22 @@ public class Corretor {
         }
     }
 
+    private static int getNumberOfLines(File file) {
+        int numberOfLines = 0;
+
+
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line = reader.readLine();
+            while (line != null){
+                numberOfLines++;
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch(IOException ex){
+            System.out.println("File not found");
+        }
+        return numberOfLines;
+    }
 }
+
