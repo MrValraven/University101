@@ -23,11 +23,38 @@ public class Corretor {
 
         createDictionary(file);
 
-        String text = "";
-        incorrectWords = new String[text.length()];
+        String inputText = "";
+        incorrectWords = new String[inputText.length()];
 
-        addLetters("ador");
-        removeLetters("adoror");
+        /* addLetters("ador");
+        removeLetters("adoror"); 
+        swapLetters("rador");*/
+
+        checkTextForErrors("Olá o meu nme é gerimilda e eu sou uma besta peluda");
+
+    }
+
+    private static String[] checkTextForErrors(String text) {
+
+        String[] splitText = text.split("\\s+");
+        incorrectWords = new String[splitText.length];
+        int incorrectWordsIndex = 0;
+
+        for(int i = 0; i < splitText.length; i++) {
+            if(hashtable.get(splitText[i]) == null) {
+                incorrectWords[incorrectWordsIndex] = splitText[i];
+                incorrectWordsIndex++;
+            }
+        }
+
+        for(int i = 0; i < incorrectWords.length; i++) {
+            if(incorrectWords[i] != null) {
+                System.out.println(incorrectWords[i]);
+            }
+        }
+
+        return incorrectWords;
+       
     }
 
     private static String[] addLetters(String word) {
@@ -94,8 +121,35 @@ public class Corretor {
         
     }
 
-    private void swapLetters(String word) {
+    private static String[] swapLetters(String word) {
 
+        int index = 0;
+        int correctWordIndex = 0;
+        String newWord = word;
+
+        //Array com espaço suficiente para todas as sugestões
+        String[] correctedWords = new String[word.length()];
+
+        while(index < word.length() - 1) {
+            newWord = swapChars(word, index);
+            System.out.println(newWord);
+
+            if(hashtable.get(newWord) != null) {
+                correctedWords[correctWordIndex] = newWord;
+                correctWordIndex++;
+            }
+                
+            index++;
+        }
+        
+        for(int i = 0; i < correctedWords.length; i++) {
+            if(correctedWords[i] != null) {
+                System.out.println(correctedWords[i]);
+            }
+        }
+
+        return correctedWords;
+        
     }
 
     private static String addChar(String word, char letter, int index) {
@@ -112,6 +166,18 @@ public class Corretor {
         return newWord.toString();
     }
 
+    private static String swapChars(String word, int index) {
+
+        StringBuilder newWord = new StringBuilder(word);
+        char firstLetter =  newWord.charAt(index);
+        char secondLetter = newWord.charAt(index + 1);
+        
+        newWord.setCharAt(index, secondLetter);
+        newWord.setCharAt(index + 1, firstLetter);
+
+        return newWord.toString();
+    }
+    
     private static void createDictionary(File file) {
         
         try{
