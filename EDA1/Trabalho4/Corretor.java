@@ -8,12 +8,10 @@ import java.io.IOException;
 public class Corretor {
 
     private static Hashtable<String> hashtable;
-    private static String[] incorrectWords;
     private static char[] alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
             'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
             'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'á', 'à', 'ã', 'â', 'Á', 'À', 'Ã',
-            'Â', 'é', 'ê', 'É', 'Ê', 'í', 'ì', 'î', 'Í', 'Ì', 'Î', 'ó', 'ò', 'õ', 'ô', 'Ó', 'Ò', 'Õ', 'Ô', 'ú', 'ù',
-            'û', 'Ú', 'Ù', 'Û', '-' };
+            'Â', 'é', 'ê', 'É', 'Ê', 'í', 'î', 'Í', 'Î', 'ó', 'õ', 'ô', 'Ó', 'Õ', 'Ô', 'ú', 'Ú', '-' };
 
     public static void main(String[] args) {
 
@@ -23,21 +21,15 @@ public class Corretor {
 
         createDictionary(file);
 
-        String inputText = "";
-        incorrectWords = new String[inputText.length()];
 
-        /* addLetters("ador");
-        removeLetters("adoror"); 
-        swapLetters("rador");*/
-
-        checkTextForErrors("Olá o meu nme é gerimilda e eu sou uma besta peluda");
+        checkTextForErrors("Olá o meu nme  Arminda e eu ador longos passeis pela praia enquanto me penetam por tras sou uma besta peluda");
 
     }
 
     private static String[] checkTextForErrors(String text) {
 
         String[] splitText = text.split("\\s+");
-        incorrectWords = new String[splitText.length];
+        String[] incorrectWords = new String[splitText.length];
         int incorrectWordsIndex = 0;
 
         for(int i = 0; i < splitText.length; i++) {
@@ -49,12 +41,50 @@ public class Corretor {
 
         for(int i = 0; i < incorrectWords.length; i++) {
             if(incorrectWords[i] != null) {
-                System.out.println(incorrectWords[i]);
+                System.out.println("Palavra incorreta: " + incorrectWords[i]);
+                System.out.println("Sugestões: " + giveWordSugestion(incorrectWords[i]) );
             }
         }
 
         return incorrectWords;
        
+    }
+
+    private static String giveWordSugestion(String word) {
+        String sugestions = "";
+
+        String[] wordsWithAddedLetters = addLetters(word);
+        String[] wordsWithRemovedLetters = removeLetters(word);
+        String[] wordsWithSwappedLetters = swapLetters(word);
+
+        for(int i = 0; i < wordsWithAddedLetters.length; i++) {
+
+            if(wordsWithAddedLetters[i] == null) {
+                break;
+            }
+
+            sugestions += wordsWithAddedLetters[i] + ",";
+        }
+
+        for(int i = 0; i < wordsWithRemovedLetters.length; i++) {
+
+            if(wordsWithRemovedLetters[i] == null) {
+                break;
+            }
+
+            sugestions += wordsWithRemovedLetters[i] + ",";
+        }
+
+        for(int i = 0; i < wordsWithSwappedLetters.length; i++) {
+
+            if(wordsWithSwappedLetters[i] == null) {
+                break;
+            }
+
+            sugestions += wordsWithSwappedLetters[i] + ",";
+        }
+
+        return sugestions;
     }
 
     private static String[] addLetters(String word) {
@@ -82,12 +112,6 @@ public class Corretor {
                 index++;
             } 
         }
-        
-        for(int i = 0; i < correctedWords.length; i++) {
-            if(correctedWords[i] != null) {
-                System.out.println(correctedWords[i]);
-            }
-        }
 
         return correctedWords;
     }
@@ -110,12 +134,6 @@ public class Corretor {
                 
             index++;
         }
-        
-        for(int i = 0; i < correctedWords.length; i++) {
-            if(correctedWords[i] != null) {
-                System.out.println(correctedWords[i]);
-            }
-        }
 
         return correctedWords;
         
@@ -132,7 +150,6 @@ public class Corretor {
 
         while(index < word.length() - 1) {
             newWord = swapChars(word, index);
-            System.out.println(newWord);
 
             if(hashtable.get(newWord) != null) {
                 correctedWords[correctWordIndex] = newWord;
@@ -140,12 +157,6 @@ public class Corretor {
             }
                 
             index++;
-        }
-        
-        for(int i = 0; i < correctedWords.length; i++) {
-            if(correctedWords[i] != null) {
-                System.out.println(correctedWords[i]);
-            }
         }
 
         return correctedWords;
