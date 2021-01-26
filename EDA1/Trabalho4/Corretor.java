@@ -13,24 +13,11 @@ public class Corretor {
             'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'á', 'à', 'ã', 'â', 'Á', 'À', 'Ã',
             'Â', 'é', 'ê', 'É', 'Ê', 'í', 'î', 'Í', 'Î', 'ó', 'õ', 'ô', 'Ó', 'Õ', 'Ô', 'ú', 'Ú', '-' };
 
-    public static void main(String[] args) {
+    public Corretor(String texto) {
 
-        long startTime = System.nanoTime();
+        createDictionary(new File("Trabalho4/wordlist-ao-2020.txt"));
 
-        String fileName = "Trabalho4/wordlist-ao-2020.txt";
-
-        File file = new File(fileName);
-
-        createDictionary(file);
-
-        checkTextForErrors("hehe");
-
-        long endTime = System.nanoTime();
-
-        long duration = (endTime - startTime) / 1000000;
-        
-        System.out.println(duration);
-        
+        checkTextForErrors(texto);
 
     }
 
@@ -86,10 +73,9 @@ public class Corretor {
     private static void removeLetters(String word) {
 
         int index = 0;
-        String newWord = word;
 
         while(index < word.length()) {
-            newWord = deleteChar(word, index);
+            String newWord = deleteChar(word, index);
             if(hashtable.get(newWord) != null) {
                 System.out.print(newWord + ", ");
             }
@@ -101,14 +87,9 @@ public class Corretor {
     private static void swapLetters(String word) {
 
         int index = 0;
-        int correctWordIndex = 0;
-        String newWord = word;
-
-        //Array com espaço suficiente para todas as sugestões
-        String[] correctedWords = new String[word.length()];
 
         while(index < word.length() - 1) {
-            newWord = swapChars(word, index);
+            String newWord = swapChars(word, index);
 
             if(hashtable.get(newWord) != null) {
                 System.out.println(newWord + ", ");
@@ -164,7 +145,6 @@ public class Corretor {
 
     private static int getNumberOfLines(File file) {
         int numberOfLines = 0;
-
 
         try{
             BufferedReader reader = new BufferedReader(new FileReader(file));
