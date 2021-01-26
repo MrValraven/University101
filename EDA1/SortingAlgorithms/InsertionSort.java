@@ -4,7 +4,7 @@ public class InsertionSort {
 
     // In-place algorithm
     // Stable algorithm
-    // O(n^2) time complexity
+    // O(n^2) time complexity | best case - O(N)
 
     public static void main(String[] args) {
 
