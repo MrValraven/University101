@@ -15,18 +15,26 @@ public class Corretor {
 
     public static void main(String[] args) {
 
+        long startTime = System.nanoTime();
+
         String fileName = "Trabalho4/wordlist-ao-2020.txt";
 
         File file = new File(fileName);
 
         createDictionary(file);
 
-
         checkTextForErrors("Olá o meu nme  Arminda e eu ador longos passeis pela praia enquanto me penetam por tras sou uma besta peluda");
+
+        long endTime = System.nanoTime();
+
+        long duration = (endTime - startTime) / 1000000;
+        
+        System.out.println(duration);
+        
 
     }
 
-    private static String[] checkTextForErrors(String text) {
+    public static String[] checkTextForErrors(String text) {
 
         String[] splitText = text.split("\\s+");
         String[] incorrectWords = new String[splitText.length];
@@ -42,7 +50,10 @@ public class Corretor {
         for(int i = 0; i < incorrectWords.length; i++) {
             if(incorrectWords[i] != null) {
                 System.out.println("Palavra incorreta: " + incorrectWords[i]);
-                System.out.println("Sugestões: " + giveWordSugestion(incorrectWords[i]) );
+                System.out.println("Sugestões: ");
+                addLetters(incorrectWords[i]);
+                removeLetters(incorrectWords[i]);
+                swapLetters(incorrectWords[i]);
             }
         }
 
@@ -50,50 +61,10 @@ public class Corretor {
        
     }
 
-    private static String giveWordSugestion(String word) {
-        String sugestions = "";
+    private static void addLetters(String word) {
 
-        String[] wordsWithAddedLetters = addLetters(word);
-        String[] wordsWithRemovedLetters = removeLetters(word);
-        String[] wordsWithSwappedLetters = swapLetters(word);
-
-        for(int i = 0; i < wordsWithAddedLetters.length; i++) {
-
-            if(wordsWithAddedLetters[i] == null) {
-                break;
-            }
-
-            sugestions += wordsWithAddedLetters[i] + ",";
-        }
-
-        for(int i = 0; i < wordsWithRemovedLetters.length; i++) {
-
-            if(wordsWithRemovedLetters[i] == null) {
-                break;
-            }
-
-            sugestions += wordsWithRemovedLetters[i] + ",";
-        }
-
-        for(int i = 0; i < wordsWithSwappedLetters.length; i++) {
-
-            if(wordsWithSwappedLetters[i] == null) {
-                break;
-            }
-
-            sugestions += wordsWithSwappedLetters[i] + ",";
-        }
-
-        return sugestions;
-    }
-
-    private static String[] addLetters(String word) {
         int index = 0;
-        int correctWordIndex = 0;
         String newWord;
-
-        //Array com espaço suficiente para todas as sugestões
-        String[] correctedWords = new String[word.length() * 2];
 
         for(int i = 0; i < alphabet.length; i++) {
 
@@ -102,44 +73,33 @@ public class Corretor {
             newWord = word + " ";
 
             // word length + 1 porque estamos a adiconar uma letra nova (potencialmente)
-            while(hashtable.get(newWord) == null && index < word.length() + 1) {
+            while(index < word.length()) {
                 newWord = addChar(word, alphabet[i], index);
                 if(hashtable.get(newWord) != null) {
-                    correctedWords[correctWordIndex] = newWord;
-                    correctWordIndex++;
+                    System.out.print(newWord + ", ");
                 }
                 
                 index++;
             } 
         }
-
-        return correctedWords;
     }
 
-    private static String[] removeLetters(String word) {
+    private static void removeLetters(String word) {
 
         int index = 0;
-        int correctWordIndex = 0;
         String newWord = word;
 
-        //Array com espaço suficiente para todas as sugestões
-        String[] correctedWords = new String[word.length()];
-
-        while(hashtable.get(newWord) == null && index < word.length()) {
+        while(index < word.length()) {
             newWord = deleteChar(word, index);
             if(hashtable.get(newWord) != null) {
-                correctedWords[correctWordIndex] = newWord;
-                correctWordIndex++;
+                System.out.print(newWord + ", ");
             }
                 
             index++;
         }
-
-        return correctedWords;
-        
     }
 
-    private static String[] swapLetters(String word) {
+    private static void swapLetters(String word) {
 
         int index = 0;
         int correctWordIndex = 0;
@@ -152,15 +112,10 @@ public class Corretor {
             newWord = swapChars(word, index);
 
             if(hashtable.get(newWord) != null) {
-                correctedWords[correctWordIndex] = newWord;
-                correctWordIndex++;
+                System.out.println(newWord + ", ");
             }
-                
             index++;
         }
-
-        return correctedWords;
-        
     }
 
     private static String addChar(String word, char letter, int index) {
@@ -194,7 +149,7 @@ public class Corretor {
         try{
 
             int numberOfLines = getNumberOfLines(file);
-            hashtable = new Hashtable<String>(numberOfLines);
+            hashtable = new Hashtable<String>(numberOfLines + (int) Math.abs(0.1 * numberOfLines));
 
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = reader.readLine();
