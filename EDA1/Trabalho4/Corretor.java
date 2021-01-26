@@ -23,7 +23,7 @@ public class Corretor {
 
         createDictionary(file);
 
-        checkTextForErrors("Olá o meu nme  Arminda e eu ador longos passeis pela praia enquanto me penetam por tras sou uma besta peluda");
+        checkTextForErrors("hehe");
 
         long endTime = System.nanoTime();
 
@@ -72,7 +72,6 @@ public class Corretor {
             index = 0;
             newWord = word + " ";
 
-            // word length + 1 porque estamos a adiconar uma letra nova (potencialmente)
             while(index < word.length()) {
                 newWord = addChar(word, alphabet[i], index);
                 if(hashtable.get(newWord) != null) {
